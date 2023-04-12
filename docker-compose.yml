@@ -1,0 +1,31 @@
+version: "3.9"
+
+volumes:
+  loan-api_data:
+
+services:
+  book-app:
+    build: ./
+    command: ./app
+    ports:
+      - "8586:8586"
+    volumes:
+      - .:/src
+    environment:
+      - GONOSUMDB=off
+      - TZ=Asia/Almaty
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13.2-alpine
+    volumes:
+      - loan-api_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5436:5432
