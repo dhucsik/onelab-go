@@ -22,10 +22,14 @@ func (h Manager) CreateRecord(c echo.Context) error {
 }
 
 func (h Manager) UpdateRecord(c echo.Context) error {
+	id := c.Param("id")
+
 	var req models.Record
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
+	req.ID = id
 
 	err := h.srv.Record.Update(c.Request().Context(), &req)
 	if err != nil {

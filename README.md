@@ -12,3 +12,8 @@
 Бонус: 
 - Офорлменная swagger документация
 
+## How to start
+
+```bash
+docker-compose up --build book-app
+```

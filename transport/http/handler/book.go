@@ -21,10 +21,14 @@ func (h Manager) CreateBook(c echo.Context) error {
 }
 
 func (h Manager) UpdateBook(c echo.Context) error {
+	id := c.Param("id")
+
 	var req models.Book
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
+	req.ID = id
 
 	err := h.srv.Book.Update(c.Request().Context(), &req)
 	if err != nil {
