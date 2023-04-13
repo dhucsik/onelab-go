@@ -14,6 +14,8 @@
 
 ## How to start
 
+Сreate a .env file and copy everything from the .env.example file there.
+
 ```bash
 docker-compose up --build book-app
 ```
