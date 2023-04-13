@@ -16,7 +16,7 @@ type Book struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Title     string
 	Author    string
-	Price     uint
+	Price     float64
 	Records   []Record
 }
 
