@@ -1,7 +1,11 @@
 package http
 
+import echoSwagger "github.com/swaggo/echo-swagger"
+
 func (s *Server) SetupRoutes() {
 	v1 := s.App.Group("/api/v1")
+
+	s.App.GET("/swagger/*", echoSwagger.EchoWrapHandler())
 
 	v1.POST("/sign-up", s.handler.SignUp)
 	v1.POST("/sign-in", s.handler.SignIn, s.m.GenerateJWTMiddleware)

@@ -6,12 +6,30 @@ import (
 	"os"
 	"os/signal"
 	"practice/config"
+	_ "practice/docs"
 	"practice/service"
 	"practice/storage"
 	"practice/transport/http"
 	"practice/transport/http/handler"
 )
 
+// @title 	Book microservice
+// @version	1.0
+// @description Simple microservice for borrowing books with jwt auth
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Dias Galikhanov
+// @contact.email diasgalikhanov@gmail.com
+
+// @host localhost:8586
+// @BasePath /api/v1
+
+// User + Auth CRUD + Swagger
+// Book CRUD + Swagger
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	log.Fatalln(run())
 }

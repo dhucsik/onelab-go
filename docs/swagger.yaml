@@ -1,0 +1,661 @@
+basePath: /api/v1
+definitions:
+  models.AuthUser:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Book:
+    properties:
+      author:
+        type: string
+      id:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+    type: object
+  models.Record:
+    properties:
+      book_id:
+        type: string
+      date_borrowed:
+        type: string
+      date_returned:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.UpdatePasswordReq:
+    properties:
+      current_password:
+        type: string
+      new_password:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+      user_role:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UserBook:
+    properties:
+      books:
+        items:
+          $ref: '#/definitions/models.Book'
+        type: array
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8586
+info:
+  contact:
+    email: diasgalikhanov@gmail.com
+    name: Dias Galikhanov
+  description: Simple microservice for borrowing books with jwt auth
+  termsOfService: http://swagger.io/terms/
+  title: Book microservice
+  version: "1.0"
+paths:
+  /book:
+    get:
+      consumes:
+      - application/json
+      description: list books
+      operationId: list-books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: List Books
+      tags:
+      - book
+    post:
+      consumes:
+      - application/json
+      description: create book
+      operationId: create-book
+      parameters:
+      - description: book info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Book'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: id
+          schema:
+            type: string
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create Book
+      tags:
+      - book
+  /book/{book_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete book by ID
+      operationId: delete-book
+      parameters:
+      - description: book id
+        in: path
+        name: book_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Book
+      tags:
+      - book
+    get:
+      consumes:
+      - application/json
+      description: get book by ID
+      operationId: get-book
+      parameters:
+      - description: book id
+        in: path
+        name: book_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Book'
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: Get Book
+      tags:
+      - book
+    put:
+      consumes:
+      - application/json
+      description: update book
+      operationId: update-book
+      parameters:
+      - description: book id
+        in: path
+        name: book_id
+        required: true
+        type: string
+      - description: book info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update Book
+      tags:
+      - book
+  /record:
+    get:
+      consumes:
+      - application/json
+      description: list records
+      operationId: list-records
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Record'
+            type: array
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: List Records
+      tags:
+      - record
+    post:
+      consumes:
+      - application/json
+      description: create record
+      operationId: create-record
+      parameters:
+      - description: record info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Record'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: id
+          schema:
+            type: string
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create Record
+      tags:
+      - record
+  /record/{record_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete record by ID
+      operationId: delete-record
+      parameters:
+      - description: record id
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete record
+      tags:
+      - record
+    get:
+      consumes:
+      - application/json
+      description: get record by ID
+      operationId: get-record
+      parameters:
+      - description: record id
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Record'
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: Get Record
+      tags:
+      - record
+    put:
+      consumes:
+      - application/json
+      description: update record
+      operationId: update-record
+      parameters:
+      - description: record id
+        in: path
+        name: record_id
+        required: true
+        type: string
+      - description: record info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Record'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update Record
+      tags:
+      - record
+  /sign-in:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: login
+      parameters:
+      - description: credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuthUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            type: string
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: SignIn
+      tags:
+      - auth
+  /sign-up:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      operationId: create-account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: id
+          schema:
+            type: string
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: SignUp
+      tags:
+      - auth
+  /update-password:
+    post:
+      consumes:
+      - application/json
+      description: update password
+      operationId: update-password
+      parameters:
+      - description: current and new password
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: UpdatePassword
+      tags:
+      - auth
+  /users-with-books:
+    get:
+      consumes:
+      - application/json
+      description: get users with books they borrowed
+      operationId: get-users-with-books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.UserBook'
+            type: array
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: GetUsersWithBooks
+      tags:
+      - user
+  /users-with-books-for-month:
+    get:
+      consumes:
+      - application/json
+      description: get users with books they borrowed for last month
+      operationId: get-users-with-books-for-month
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.UserBook'
+            type: array
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: GetUsersWithBooksForMonth
+      tags:
+      - user
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
