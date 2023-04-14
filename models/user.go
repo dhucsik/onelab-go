@@ -26,7 +26,7 @@ type UserBook struct {
 	Firsname string `json:"first_name"`
 	LastName string `json:"last_name"`
 	Email    string `json:"email"`
-	Books    []uint `json:"books"`
+	Books    []Book `json:"books"`
 }
 
 const AdminRole = "admin"

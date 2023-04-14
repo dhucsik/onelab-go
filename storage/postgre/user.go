@@ -19,8 +19,9 @@ type User struct {
 	Username  string         `gorm:"unique"`
 	Email     string         `gorm:"unique"`
 	Password  string         ``
-	UserRole  string
-	Records   []Record
+	UserRole  string         ``
+	Records   []Record       ``
+	Books     []Book         `gorm:"many2many:records"`
 }
 
 type UserRepository struct {
@@ -48,7 +49,7 @@ func (r *UserRepository) GetByUsername(ctx context.Context, username string) (mo
 
 func (r *UserRepository) GetUsersWithBooks(ctx context.Context) ([]models.UserBook, error) {
 	var users []User
-	err := r.db.Model(&User{}).Preload("Records").Find(&users).Where("records.date_returned IS NULL").Error
+	err := r.db.Model(&User{}).Preload("Records").Preload("Books").Find(&users).Where("records.date_returned IS NULL").Error
 
 	return toUserBookModels(users), err
 }
@@ -59,7 +60,7 @@ func (r *UserRepository) UpdatePassword(ctx context.Context, ID string, password
 
 func (r *UserRepository) GetUsersWithBooksForMonth(ctx context.Context) ([]models.UserBook, error) {
 	var users []User
-	err := r.db.Model(&User{}).Preload("Records").Find(&users).Where("records.date_borrowed BETWEEN DATE_TRUNC('month', NOW() - INTERVAL '1 month') AND DATE_TRUNC('month', NOW())").Error
+	err := r.db.Model(&User{}).Preload("Records").Preload("Books").Find(&users).Where("records.date_borrowed BETWEEN DATE_TRUNC('month', NOW() - INTERVAL '1 month') AND DATE_TRUNC('month', NOW())").Error
 
 	return toUserBookModels(users), err
 }
@@ -104,6 +105,6 @@ func toUserBookModel(u *User) models.UserBook {
 		Firsname: u.FirstName,
 		LastName: u.LastName,
 		Email:    u.Email,
-		Books:    fromRecordsToBooks(u.Records),
+		Books:    toBookModels(u.Books),
 	}
 }

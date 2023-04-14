@@ -92,6 +92,7 @@ func toBookModels(books []Book) []models.Book {
 	return out
 }
 
+/*
 func fromRecordsToBooks(records []Record) []uint {
 	out := make([]uint, len(records))
 
@@ -101,3 +102,4 @@ func fromRecordsToBooks(records []Record) []uint {
 
 	return out
 }
+*/
