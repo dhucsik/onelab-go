@@ -27,14 +27,14 @@ func (s *BookService) Create(ctx context.Context, book *models.Book) (string, er
 	return s.repo.Book.Create(ctx, book)
 }
 
-func (s *BookService) Update(ctx context.Context, book *models.Book) error {
+func (s *BookService) Update(ctx context.Context, ID string, book *models.Book) error {
 	user := ctx.Value(models.ContextKey).(*models.ContextUserData)
 
 	if user.UserRole != models.AdminRole && user.UserRole != models.ModeratorRole {
 		return errors.New("permission denied")
 	}
 
-	return s.repo.Book.Update(ctx, book)
+	return s.repo.Book.Update(ctx, ID, book)
 }
 
 func (s *BookService) Delete(ctx context.Context, ID string) error {

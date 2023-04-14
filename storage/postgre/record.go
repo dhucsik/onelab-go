@@ -39,12 +39,19 @@ func (r *RecordRepository) Create(ctx context.Context, record *models.Record) (s
 	return strconv.FormatUint(uint64(model.ID), 10), result.Error
 }
 
-func (r *RecordRepository) Update(ctx context.Context, record *models.Record) error {
+func (r *RecordRepository) Update(ctx context.Context, ID string, record *models.Record) error {
+	id, err := strconv.ParseUint(ID, 10, 32)
+	if err != nil {
+		return err
+	}
+
 	model, err := toPostgreRecord(record)
 	if err != nil {
 		return err
 	}
-	return r.db.Updates(&model).Error
+
+	model.ID = uint(id)
+	return r.db.Save(&model).Error
 }
 
 func (r *RecordRepository) Get(ctx context.Context, ID string) (models.Record, error) {

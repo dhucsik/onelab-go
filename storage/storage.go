@@ -17,7 +17,7 @@ type IUserRepository interface {
 
 type IBookRepository interface {
 	Create(ctx context.Context, book *models.Book) (string, error)
-	Update(ctx context.Context, book *models.Book) error
+	Update(ctx context.Context, ID string, book *models.Book) error
 	Get(ctx context.Context, ID string) (models.Book, error)
 	Delete(ctx context.Context, ID string) error
 	List(ctx context.Context) ([]models.Book, error)
@@ -26,7 +26,7 @@ type IBookRepository interface {
 type IRecordRepository interface {
 	Create(ctx context.Context, record *models.Record) (string, error)
 	Get(ctx context.Context, ID string) (models.Record, error)
-	Update(ctx context.Context, record *models.Record) error
+	Update(ctx context.Context, ID string, record *models.Record) error
 	List(ctx context.Context) ([]models.Record, error)
 	Delete(ctx context.Context, ID string) error
 }

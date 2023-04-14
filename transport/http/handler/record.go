@@ -29,9 +29,7 @@ func (h Manager) UpdateRecord(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	req.ID = id
-
-	err := h.srv.Record.Update(c.Request().Context(), &req)
+	err := h.srv.Record.Update(c.Request().Context(), id, &req)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

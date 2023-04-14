@@ -34,9 +34,15 @@ func (r *BookRepository) Create(ctx context.Context, book *models.Book) (string,
 	return strconv.FormatUint(uint64(model.ID), 10), result.Error
 }
 
-func (r *BookRepository) Update(ctx context.Context, book *models.Book) error {
+func (r *BookRepository) Update(ctx context.Context, ID string, book *models.Book) error {
+	id, err := strconv.ParseUint(ID, 10, 32)
+	if err != nil {
+		return err
+	}
+
 	model := toPostgreBook(book)
-	return r.db.Updates(&model).Error
+	model.ID = uint(id)
+	return r.db.Save(&model).Error
 }
 
 func (r *BookRepository) Get(ctx context.Context, ID string) (models.Book, error) {

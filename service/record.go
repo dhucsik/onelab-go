@@ -33,14 +33,14 @@ func (s *RecordService) Create(ctx context.Context, record *models.Record) (stri
 	return s.repo.Record.Create(ctx, record)
 }
 
-func (s *RecordService) Update(ctx context.Context, record *models.Record) error {
+func (s *RecordService) Update(ctx context.Context, ID string, record *models.Record) error {
 	user := ctx.Value(models.ContextKey).(*models.ContextUserData)
 
 	if user.UserRole != models.AdminRole && user.UserRole != models.ModeratorRole {
 		return errors.New("permission denied")
 	}
 
-	return s.repo.Record.Update(ctx, record)
+	return s.repo.Record.Update(ctx, ID, record)
 }
 
 func (s *RecordService) Delete(ctx context.Context, ID string) error {
