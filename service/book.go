@@ -54,3 +54,7 @@ func (s *BookService) Get(ctx context.Context, ID string) (models.Book, error) {
 func (s *BookService) List(ctx context.Context) ([]models.Book, error) {
 	return s.repo.Book.List(ctx)
 }
+
+func (s *BookService) GetBooksUsersIncome(ctx context.Context) ([]models.BookUserIncome, error) {
+	return s.repo.Book.GetBooksUsersIncome(ctx)
+}

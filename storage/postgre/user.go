@@ -18,10 +18,10 @@ type User struct {
 	LastName  string         ``
 	Username  string         `gorm:"unique"`
 	Email     string         `gorm:"unique"`
-	Password  string         ``
+	Password  string         `gorm:""`
 	UserRole  string         ``
-	Records   []Record       ``
-	Books     []Book         `gorm:"many2many:records"`
+	BookRents []BookRent     ``
+	Books     []Book         `gorm:"many2many:book_rents"`
 }
 
 type UserRepository struct {
@@ -49,7 +49,7 @@ func (r *UserRepository) GetByUsername(ctx context.Context, username string) (mo
 
 func (r *UserRepository) GetUsersWithBooks(ctx context.Context) ([]models.UserBook, error) {
 	var users []User
-	err := r.db.Model(&User{}).Preload("Records").Preload("Books").Find(&users).Where("records.date_returned IS NULL").Error
+	err := r.db.Model(&User{}).Preload("BookRents").Preload("Books").Find(&users).Where("records.date_returned IS NULL").Error
 
 	return toUserBookModels(users), err
 }
@@ -60,7 +60,7 @@ func (r *UserRepository) UpdatePassword(ctx context.Context, ID string, password
 
 func (r *UserRepository) GetUsersWithBooksForMonth(ctx context.Context) ([]models.UserBook, error) {
 	var users []User
-	err := r.db.Model(&User{}).Preload("Records").Preload("Books").Find(&users).Where("records.date_borrowed BETWEEN DATE_TRUNC('month', NOW() - INTERVAL '1 month') AND DATE_TRUNC('month', NOW())").Error
+	err := r.db.Model(&User{}).Preload("BookRents").Preload("Books").Find(&users).Where("records.date_borrowed BETWEEN DATE_TRUNC('month', NOW() - INTERVAL '1 month') AND DATE_TRUNC('month', NOW())").Error
 
 	return toUserBookModels(users), err
 }
@@ -74,6 +74,16 @@ func toPostgreUser(u *models.User) User {
 		Password:  u.Password,
 		UserRole:  u.UserRole,
 	}
+}
+
+func toUserModels(users []User) []models.User {
+	out := make([]models.User, len(users))
+
+	for i, user := range users {
+		out[i] = toUserModel(&user)
+	}
+
+	return out
 }
 
 func toUserModel(u *User) models.User {
@@ -106,5 +116,25 @@ func toUserBookModel(u *User) models.UserBook {
 		LastName: u.LastName,
 		Email:    u.Email,
 		Books:    toBookModels(u.Books),
+	}
+}
+
+func toUserRespModels(users []User) []models.UserResp {
+	out := make([]models.UserResp, len(users))
+
+	for i, user := range users {
+		out[i] = toUserRespModel(&user)
+	}
+
+	return out
+}
+
+func toUserRespModel(u *User) models.UserResp {
+	return models.UserResp{
+		ID:        strconv.FormatUint(uint64(u.ID), 10),
+		Username:  u.Username,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		Email:     u.Email,
 	}
 }

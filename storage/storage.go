@@ -21,20 +21,21 @@ type IBookRepository interface {
 	Get(ctx context.Context, ID string) (models.Book, error)
 	Delete(ctx context.Context, ID string) error
 	List(ctx context.Context) ([]models.Book, error)
+	GetBooksUsersIncome(ctx context.Context) ([]models.BookUserIncome, error)
 }
 
-type IRecordRepository interface {
-	Create(ctx context.Context, record *models.Record) (string, error)
-	Get(ctx context.Context, ID string) (models.Record, error)
-	Update(ctx context.Context, ID string, record *models.Record) error
-	List(ctx context.Context) ([]models.Record, error)
+type IBookRentRepository interface {
+	Create(ctx context.Context, bookRent *models.BookRent) (string, error)
+	Get(ctx context.Context, ID string) (models.BookRent, error)
+	Update(ctx context.Context, ID string, bookRent *models.BookRent) error
+	List(ctx context.Context) ([]models.BookRent, error)
 	Delete(ctx context.Context, ID string) error
 }
 
 type Storage struct {
-	User   IUserRepository
-	Book   IBookRepository
-	Record IRecordRepository
+	User     IUserRepository
+	Book     IBookRepository
+	BookRent IBookRentRepository
 }
 
 func New(ctx context.Context, cfg *config.Config) (*Storage, error) {
@@ -45,12 +46,12 @@ func New(ctx context.Context, cfg *config.Config) (*Storage, error) {
 
 	userRepo := postgre.NewUserRepository(pgDB)
 	bookRepo := postgre.NewBookRepository(pgDB)
-	recordRepo := postgre.NewRecordRepository(pgDB)
+	rentRepo := postgre.NewBookRentRepository(pgDB)
 
 	storage := Storage{
-		User:   userRepo,
-		Book:   bookRepo,
-		Record: recordRepo,
+		User:     userRepo,
+		Book:     bookRepo,
+		BookRent: rentRepo,
 	}
 	return &storage, nil
 }

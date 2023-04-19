@@ -126,6 +126,57 @@
                 }
             }
         },
+        "/book-users-income": {
+            "get": {
+                "description": "get books that users have and total income for each",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "book"
+                ],
+                "summary": "GetBooksUsersIncome",
+                "operationId": "get-book-users-income",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BookUserIncome"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "default": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/book/{book_id}": {
             "get": {
                 "description": "get book by ID",
@@ -306,9 +357,9 @@
                 }
             }
         },
-        "/record": {
+        "/rent": {
             "get": {
-                "description": "list records",
+                "description": "list book rents",
                 "consumes": [
                     "application/json"
                 ],
@@ -316,17 +367,17 @@
                     "application/json"
                 ],
                 "tags": [
-                    "record"
+                    "rent"
                 ],
-                "summary": "List Records",
-                "operationId": "list-records",
+                "summary": "List Book Rents",
+                "operationId": "list-rents",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Record"
+                                "$ref": "#/definitions/models.BookRent"
                             }
                         }
                     },
@@ -362,7 +413,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "create record",
+                "description": "create book rent",
                 "consumes": [
                     "application/json"
                 ],
@@ -370,18 +421,18 @@
                     "application/json"
                 ],
                 "tags": [
-                    "record"
+                    "rent"
                 ],
-                "summary": "Create Record",
-                "operationId": "create-record",
+                "summary": "Create Book Rent",
+                "operationId": "create-rent",
                 "parameters": [
                     {
-                        "description": "record info",
+                        "description": "rent info",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Record"
+                            "$ref": "#/definitions/models.BookRent"
                         }
                     }
                 ],
@@ -419,9 +470,9 @@
                 }
             }
         },
-        "/record/{record_id}": {
+        "/rent/{rent_id}": {
             "get": {
-                "description": "get record by ID",
+                "description": "get book rent by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -429,15 +480,15 @@
                     "application/json"
                 ],
                 "tags": [
-                    "record"
+                    "rent"
                 ],
-                "summary": "Get Record",
-                "operationId": "get-record",
+                "summary": "Get Book Rent",
+                "operationId": "get-rent",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "record id",
-                        "name": "record_id",
+                        "description": "rent id",
+                        "name": "rent_id",
                         "in": "path",
                         "required": true
                     }
@@ -446,7 +497,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Record"
+                            "$ref": "#/definitions/models.BookRent"
                         }
                     },
                     "400": {
@@ -481,7 +532,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "update record",
+                "description": "update book rent",
                 "consumes": [
                     "application/json"
                 ],
@@ -489,25 +540,25 @@
                     "application/json"
                 ],
                 "tags": [
-                    "record"
+                    "rent"
                 ],
-                "summary": "Update Record",
-                "operationId": "update-record",
+                "summary": "Update Book Rent",
+                "operationId": "update-rent",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "record id",
-                        "name": "record_id",
+                        "description": "rent id",
+                        "name": "rent_id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "record info",
+                        "description": "rent info",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Record"
+                            "$ref": "#/definitions/models.BookRent"
                         }
                     }
                 ],
@@ -547,7 +598,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "delete record by ID",
+                "description": "delete book rent by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -555,15 +606,15 @@
                     "application/json"
                 ],
                 "tags": [
-                    "record"
+                    "rent"
                 ],
-                "summary": "Delete record",
-                "operationId": "delete-record",
+                "summary": "Delete Book Rent",
+                "operationId": "delete-rent",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "record id",
-                        "name": "record_id",
+                        "description": "rent id",
+                        "name": "rent_id",
                         "in": "path",
                         "required": true
                     }
@@ -902,7 +953,7 @@
                 "id": {
                     "type": "string"
                 },
-                "price": {
+                "rent_price": {
                     "type": "number"
                 },
                 "title": {
@@ -910,13 +961,13 @@
                 }
             }
         },
-        "models.Record": {
+        "models.BookRent": {
             "type": "object",
             "properties": {
                 "book_id": {
                     "type": "string"
                 },
-                "date_borrowed": {
+                "date_rented": {
                     "type": "string"
                 },
                 "date_returned": {
@@ -930,6 +981,29 @@
                 },
                 "user_id": {
                     "type": "string"
+                }
+            }
+        },
+        "models.BookUserIncome": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "total_income": {
+                    "type": "number"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserResp"
+                    }
                 }
             }
         },
@@ -979,6 +1053,26 @@
                         "$ref": "#/definitions/models.Book"
                     }
                 },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserResp": {
+            "type": "object",
+            "properties": {
                 "email": {
                     "type": "string"
                 },

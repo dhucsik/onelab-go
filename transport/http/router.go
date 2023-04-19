@@ -18,10 +18,11 @@ func (s *Server) SetupRoutes() {
 	v1.GET("/book", s.handler.ListBooks)
 	v1.GET("/book/:id", s.handler.GetBook)
 	v1.DELETE("/book/:id", s.handler.DeleteBook, s.m.Auth)
+	v1.GET("/book-users-income", s.handler.GetBooksUsersIncome)
 
-	v1.POST("/record", s.handler.CreateRecord, s.m.Auth)
-	v1.PUT("/record/:id", s.handler.UpdateRecord, s.m.Auth)
-	v1.GET("/record", s.handler.ListRecords)
-	v1.GET("/record/:id", s.handler.GetRecord)
-	v1.DELETE("/record/:id", s.handler.DeleteRecord, s.m.Auth)
+	v1.POST("/rent", s.handler.CreateBookRent, s.m.Auth)
+	v1.PUT("/rent/:id", s.handler.UpdateBookRent, s.m.Auth)
+	v1.GET("/rent", s.handler.ListBookRents)
+	v1.GET("/rent/:id", s.handler.GetBookRent)
+	v1.DELETE("/rent/:id", s.handler.DeleteBookRent, s.m.Auth)
 }

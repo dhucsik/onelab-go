@@ -15,7 +15,7 @@ func Dial(ctx context.Context, url string) (*gorm.DB, error) {
 	}
 
 	if db != nil {
-		db.AutoMigrate(&User{}, &Book{}, &Record{})
+		db.AutoMigrate(&User{}, &Book{}, &BookRent{})
 	}
 
 	return db, nil

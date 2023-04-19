@@ -29,6 +29,14 @@ type UserBook struct {
 	Books    []Book `json:"books"`
 }
 
+type UserResp struct {
+	ID        string `json:"id"`
+	Username  string `json:"username"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+}
+
 const AdminRole = "admin"
 const ModeratorRole = "moderator"
 const UserRole = "user"

@@ -131,3 +131,23 @@ func (h Manager) DeleteBook(c echo.Context) error {
 
 	return c.NoContent(http.StatusOK)
 }
+
+// @Summary GetBooksUsersIncome
+// @Tags book
+// @Description get books that users have and total income for each
+// @ID get-book-users-income
+// @Accept json
+// @Produce json
+// @Success 200 {object} []models.BookUserIncome
+// @Failure 400,404 {string} string "message"
+// @Failure 500 {string} string "message"
+// @Failure default {string} string "message"
+// @Router /book-users-income [get]
+func (h Manager) GetBooksUsersIncome(c echo.Context) error {
+	resp, err := h.srv.Book.GetBooksUsersIncome(c.Request().Context())
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}

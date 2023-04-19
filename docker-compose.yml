@@ -1,7 +1,7 @@
 version: "3.9"
 
 volumes:
-  loan-api_data:
+  book-api_data:
 
 services:
   book-app:
@@ -22,7 +22,7 @@ services:
   postgres:
     image: postgres:13.2-alpine
     volumes:
-      - loan-api_data:/var/lib/postgresql/data
+      - book-api_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres

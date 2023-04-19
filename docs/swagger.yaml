@@ -13,16 +13,16 @@ definitions:
         type: string
       id:
         type: string
-      price:
+      rent_price:
         type: number
       title:
         type: string
     type: object
-  models.Record:
+  models.BookRent:
     properties:
       book_id:
         type: string
-      date_borrowed:
+      date_rented:
         type: string
       date_returned:
         type: string
@@ -32,6 +32,21 @@ definitions:
         type: string
       user_id:
         type: string
+    type: object
+  models.BookUserIncome:
+    properties:
+      author:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      total_income:
+        type: number
+      users:
+        items:
+          $ref: '#/definitions/models.UserResp'
+        type: array
     type: object
   models.UpdatePasswordReq:
     properties:
@@ -63,6 +78,19 @@ definitions:
         items:
           $ref: '#/definitions/models.Book'
         type: array
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UserResp:
+    properties:
       email:
         type: string
       first_name:
@@ -156,6 +184,40 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create Book
+      tags:
+      - book
+  /book-users-income:
+    get:
+      consumes:
+      - application/json
+      description: get books that users have and total income for each
+      operationId: get-book-users-income
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BookUserIncome'
+            type: array
+        "400":
+          description: message
+          schema:
+            type: string
+        "404":
+          description: message
+          schema:
+            type: string
+        "500":
+          description: message
+          schema:
+            type: string
+        default:
+          description: message
+          schema:
+            type: string
+      summary: GetBooksUsersIncome
       tags:
       - book
   /book/{book_id}:
@@ -276,12 +338,12 @@ paths:
       summary: Update Book
       tags:
       - book
-  /record:
+  /rent:
     get:
       consumes:
       - application/json
-      description: list records
-      operationId: list-records
+      description: list book rents
+      operationId: list-rents
       produces:
       - application/json
       responses:
@@ -289,7 +351,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Record'
+              $ref: '#/definitions/models.BookRent'
             type: array
         "400":
           description: message
@@ -307,21 +369,21 @@ paths:
           description: message
           schema:
             type: string
-      summary: List Records
+      summary: List Book Rents
       tags:
-      - record
+      - rent
     post:
       consumes:
       - application/json
-      description: create record
-      operationId: create-record
+      description: create book rent
+      operationId: create-rent
       parameters:
-      - description: record info
+      - description: rent info
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/models.Record'
+          $ref: '#/definitions/models.BookRent'
       produces:
       - application/json
       responses:
@@ -347,19 +409,19 @@ paths:
             type: string
       security:
       - ApiKeyAuth: []
-      summary: Create Record
+      summary: Create Book Rent
       tags:
-      - record
-  /record/{record_id}:
+      - rent
+  /rent/{rent_id}:
     delete:
       consumes:
       - application/json
-      description: delete record by ID
-      operationId: delete-record
+      description: delete book rent by ID
+      operationId: delete-rent
       parameters:
-      - description: record id
+      - description: rent id
         in: path
-        name: record_id
+        name: rent_id
         required: true
         type: string
       produces:
@@ -385,18 +447,18 @@ paths:
             type: string
       security:
       - ApiKeyAuth: []
-      summary: Delete record
+      summary: Delete Book Rent
       tags:
-      - record
+      - rent
     get:
       consumes:
       - application/json
-      description: get record by ID
-      operationId: get-record
+      description: get book rent by ID
+      operationId: get-rent
       parameters:
-      - description: record id
+      - description: rent id
         in: path
-        name: record_id
+        name: rent_id
         required: true
         type: string
       produces:
@@ -405,7 +467,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Record'
+            $ref: '#/definitions/models.BookRent'
         "400":
           description: message
           schema:
@@ -422,26 +484,26 @@ paths:
           description: message
           schema:
             type: string
-      summary: Get Record
+      summary: Get Book Rent
       tags:
-      - record
+      - rent
     put:
       consumes:
       - application/json
-      description: update record
-      operationId: update-record
+      description: update book rent
+      operationId: update-rent
       parameters:
-      - description: record id
+      - description: rent id
         in: path
-        name: record_id
+        name: rent_id
         required: true
         type: string
-      - description: record info
+      - description: rent info
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/models.Record'
+          $ref: '#/definitions/models.BookRent'
       produces:
       - application/json
       responses:
@@ -465,9 +527,9 @@ paths:
             type: string
       security:
       - ApiKeyAuth: []
-      summary: Update Record
+      summary: Update Book Rent
       tags:
-      - record
+      - rent
   /sign-in:
     post:
       consumes:

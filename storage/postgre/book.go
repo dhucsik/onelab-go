@@ -14,10 +14,11 @@ type Book struct {
 	CreatedAt time.Time      ``
 	UpdatedAt time.Time      ``
 	DeletedAt gorm.DeletedAt `gorm:"index"`
-	Title     string
-	Author    string
-	Price     float64
-	Records   []Record
+	Title     string         ``
+	Author    string         ``
+	RentPrice float64        ``
+	BookRents []BookRent     ``
+	Users     []User         `gorm:"many2many:book_rents"`
 }
 
 type BookRepository struct {
@@ -65,20 +66,27 @@ func (r *BookRepository) List(ctx context.Context) ([]models.Book, error) {
 	return toBookModels(books), err.Error
 }
 
+func (r *BookRepository) GetBooksUsersIncome(ctx context.Context) ([]models.BookUserIncome, error) {
+	var books []Book
+	err := r.db.Model(&Book{}).Preload("BookRents").Preload("Users").Find(&books).Error
+
+	return toBookUserIncomeModels(books), err
+}
+
 func toPostgreBook(b *models.Book) Book {
 	return Book{
-		Title:  b.Title,
-		Author: b.Author,
-		Price:  b.Price,
+		Title:     b.Title,
+		Author:    b.Author,
+		RentPrice: b.RentPrice,
 	}
 }
 
 func toBookModel(b *Book) models.Book {
 	return models.Book{
-		ID:     strconv.FormatUint(uint64(b.ID), 10),
-		Title:  b.Title,
-		Author: b.Author,
-		Price:  b.Price,
+		ID:        strconv.FormatUint(uint64(b.ID), 10),
+		Title:     b.Title,
+		Author:    b.Author,
+		RentPrice: b.RentPrice,
 	}
 }
 
@@ -92,14 +100,22 @@ func toBookModels(books []Book) []models.Book {
 	return out
 }
 
-/*
-func fromRecordsToBooks(records []Record) []uint {
-	out := make([]uint, len(records))
+func toBookUserIncomeModels(books []Book) []models.BookUserIncome {
+	out := make([]models.BookUserIncome, len(books))
 
-	for i, record := range records {
-		out[i] = record.BookID
+	for i, book := range books {
+		out[i] = toBookUserIncomeModel(&book)
 	}
 
 	return out
 }
-*/
+
+func toBookUserIncomeModel(book *Book) models.BookUserIncome {
+	return models.BookUserIncome{
+		ID:          strconv.FormatUint(uint64(book.ID), 10),
+		Title:       book.Title,
+		Author:      book.Author,
+		Users:       toUserRespModels(book.Users),
+		TotalIncome: float64(len(book.Users)) * book.RentPrice,
+	}
+}

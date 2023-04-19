@@ -24,20 +24,21 @@ type IBookService interface {
 	Delete(ctx context.Context, ID string) error
 	Get(ctx context.Context, ID string) (models.Book, error)
 	List(ctx context.Context) ([]models.Book, error)
+	GetBooksUsersIncome(ctx context.Context) ([]models.BookUserIncome, error)
 }
 
-type IRecordService interface {
-	Create(ctx context.Context, record *models.Record) (string, error)
-	Update(ctx context.Context, ID string, record *models.Record) error
+type IBookRentService interface {
+	Create(ctx context.Context, bookRent *models.BookRent) (string, error)
+	Update(ctx context.Context, ID string, bookRent *models.BookRent) error
 	Delete(ctx context.Context, ID string) error
-	Get(ctx context.Context, ID string) (models.Record, error)
-	List(ctx context.Context) ([]models.Record, error)
+	Get(ctx context.Context, ID string) (models.BookRent, error)
+	List(ctx context.Context) ([]models.BookRent, error)
 }
 
 type Manager struct {
-	User   IUserService
-	Book   IBookService
-	Record IRecordService
+	User     IUserService
+	Book     IBookService
+	BookRent IBookRentService
 }
 
 func NewManager(storage *storage.Storage) (*Manager, error) {
@@ -47,11 +48,11 @@ func NewManager(storage *storage.Storage) (*Manager, error) {
 
 	uSrv := NewUserService(storage)
 	bSrv := NewBookService(storage)
-	rSrv := NewRecordService(storage)
+	rSrv := NewBookRentService(storage)
 
 	return &Manager{
-		User:   uSrv,
-		Book:   bSrv,
-		Record: rSrv,
+		User:     uSrv,
+		Book:     bSrv,
+		BookRent: rSrv,
 	}, nil
 }
