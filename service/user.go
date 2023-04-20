@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"practice/models"
 	"practice/storage"
 
@@ -43,7 +42,7 @@ func (s *UserService) VerifyRole(role string) error {
 	case models.UserRole:
 		// Nothing to do, verified successfully
 	default:
-		return fmt.Errorf("role '%v' does not exist", role)
+		return ErrRoleDoesNotExist
 	}
 
 	return nil

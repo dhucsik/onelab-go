@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golang/mock v1.4.4
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/spf13/viper v1.15.0
 	github.com/swaggo/echo-swagger v1.4.0
