@@ -10,7 +10,8 @@ FROM alpine:latest as stage2
 WORKDIR /app
 COPY --from=stage1 /app/app .
 COPY --from=stage1 /app/config /app/config
-COPY --from=stage1 /app/.env /app/
+COPY --from=stage1 /app/app.env /app/
+COPY --from=stage1 /app/docs /app/docs
 COPY --from=stage1 /usr/local/go/lib/time/zoneinfo.zip /
 ENV TZ=Asia/Almaty
 ENV ZONEINFO=/zoneinfo.zip
