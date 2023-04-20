@@ -43,7 +43,7 @@ func TestBookHandler_Get(t *testing.T) {
 }
 
 func getBookHandler(t *testing.T) (*Manager, error) {
-	viper.AddConfigPath("../..")
+	viper.AddConfigPath("../../..")
 	cfg, err := config.New()
 	if err != nil {
 		return nil, err
