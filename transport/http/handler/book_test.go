@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -42,6 +43,7 @@ func TestBookHandler_Get(t *testing.T) {
 }
 
 func getBookHandler(t *testing.T) (*Manager, error) {
+	viper.AddConfigPath("../..")
 	cfg, err := config.New()
 	if err != nil {
 		return nil, err

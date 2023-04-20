@@ -14,8 +14,13 @@ type Config struct {
 }
 
 func New() (*Config, error) {
-	viper.SetConfigFile("./.env")
-	viper.ReadInConfig()
+	viper.AddConfigPath(".")
+	viper.SetConfigName("app")
+	viper.SetConfigType("env")
+	viper.AutomaticEnv()
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, err
+	}
 
 	url := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",

@@ -6,6 +6,8 @@ import (
 	"practice/config"
 	"practice/models"
 	"testing"
+
+	"github.com/spf13/viper"
 )
 
 func TestBookRepo_Create(t *testing.T) {
@@ -54,6 +56,7 @@ func TestBookRepo_Create(t *testing.T) {
 }
 
 func CreateBookRepo(t *testing.T) (*BookRepository, error) {
+	viper.AddConfigPath("../..")
 	cfg, err := config.New()
 	if err != nil {
 		return nil, err
