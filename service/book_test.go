@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"practice/logging"
 	"practice/models"
 	"practice/storage"
 	repoMock "practice/storage/mocks"
@@ -12,6 +13,8 @@ import (
 )
 
 func TestGet(t *testing.T) {
+	logger := logging.GetLogger()
+
 	type args struct {
 		ctx context.Context
 		id  string
@@ -29,7 +32,7 @@ func TestGet(t *testing.T) {
 			want:    models.Book{ID: "12", Title: "Book12", Author: "Author12"},
 			wantErr: false,
 			prepare: func(f *repoMock.MockIBookRepository) {
-				f.EXPECT().Get(gomock.Any(), "12").Return(models.Book{
+				f.EXPECT().Get(gomock.Any(), "12", logger).Return(models.Book{
 					ID: "12", Title: "Book12", Author: "Author12",
 				}, nil)
 			},
@@ -40,7 +43,7 @@ func TestGet(t *testing.T) {
 			want:    models.Book{},
 			wantErr: true,
 			prepare: func(f *repoMock.MockIBookRepository) {
-				f.EXPECT().Get(gomock.Any(), "0").Return(models.Book{}, errors.New("record not found"))
+				f.EXPECT().Get(gomock.Any(), "0", logger).Return(models.Book{}, errors.New("record not found"))
 			},
 		},
 	}
@@ -52,7 +55,7 @@ func TestGet(t *testing.T) {
 		tCase.prepare(bookRepo)
 		s := NewBookService(&storage.Storage{Book: bookRepo})
 		t.Run(tCase.name, func(t *testing.T) {
-			resp, err := s.Get(tCase.args.ctx, tCase.args.id)
+			resp, err := s.Get(tCase.args.ctx, tCase.args.id, logger)
 			if (err != nil) != tCase.wantErr {
 				t.Errorf("Get() error = %v, wantErr %v", err, tCase.wantErr)
 				return

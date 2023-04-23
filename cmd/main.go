@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"practice/config"
 	_ "practice/docs"
+	"practice/logging"
 	"practice/service"
 	"practice/storage"
 	"practice/transport/http"
@@ -31,10 +32,11 @@ import (
 // @in header
 // @name Authorization
 func main() {
-	log.Fatalln(run())
+	logger := logging.GetLogger()
+	logger.Fatalln(run(logger))
 }
 
-func run() error {
+func run(logger *logging.Logger) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -44,18 +46,24 @@ func run() error {
 		return err
 	}
 
+	logger.Infof("Get configuration %v\n", conf)
+
 	stg, err := storage.New(ctx, conf)
 	if err != nil {
-		log.Fatal(err.Error())
+		logger.Fatalln(err.Error())
 	}
+
+	logger.Infof("Connected to database\n")
 
 	svc, svcErr := service.NewManager(stg)
 	if svcErr != nil {
 		return svcErr
 	}
 
+	logger.Infof("Set services\n")
+
 	h := handler.NewManager(svc)
-	HTTPServer := http.NewServer(conf, h)
+	HTTPServer := http.NewServer(conf, h, logger)
 
 	return HTTPServer.StartHTTPServer(ctx)
 }

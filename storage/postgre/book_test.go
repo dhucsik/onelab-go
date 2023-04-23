@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"practice/config"
+	"practice/logging"
 	"practice/models"
 	"testing"
 
@@ -11,6 +12,8 @@ import (
 )
 
 func TestBookRepo_Create(t *testing.T) {
+	logger := logging.GetLogger()
+
 	type args struct {
 		ctx  context.Context
 		book *models.Book
@@ -36,7 +39,7 @@ func TestBookRepo_Create(t *testing.T) {
 
 	for _, tCase := range tests {
 		t.Run(tCase.name, func(t *testing.T) {
-			resp, err := repo.Create(tCase.args.ctx, tCase.args.book)
+			resp, err := repo.Create(tCase.args.ctx, tCase.args.book, logger)
 			if (err != nil) != tCase.wantErr {
 				t.Errorf("Create() error = %v, wantErr %v", err, tCase.wantErr)
 				return
@@ -45,7 +48,7 @@ func TestBookRepo_Create(t *testing.T) {
 				t.Errorf("Create() resp = %v, want %v", resp, tCase.want)
 			}
 
-			book, err := repo.Get(context.Background(), resp)
+			book, err := repo.Get(context.Background(), resp, logger)
 			if err != nil {
 				t.Errorf("Create() resp = %v, want %v", resp, tCase.want)
 			}

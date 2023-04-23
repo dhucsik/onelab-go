@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"practice/logging"
 	"practice/models"
 
 	"github.com/labstack/echo/v4"
@@ -20,16 +21,24 @@ import (
 // @Failure 500 {string} string "message"
 // @Failure default {string} string "message"
 // @Router /book [post]
-func (h Manager) CreateBook(c echo.Context) error {
+func (h Manager) CreateBook(c echo.Context, logger *logging.Logger) error {
+	logger.Infof("Handler level\n")
+
 	var req models.Book
-	if err := c.Bind(&req); err != nil {
+	err := c.Bind(&req)
+	if err != nil {
+		logger.Errorf("Error while binding %v: %v\n", &req, err)
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	ID, err := h.srv.Book.Create(c.Request().Context(), &req)
+	logger.Infof("Get book %v", &req)
+
+	ID, err := h.srv.Book.Create(c.Request().Context(), &req, logger)
 	if err != nil {
+		logger.Errorf("Error while creating record: %v\n", err)
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
 	return c.JSON(http.StatusCreated, map[string]interface{}{
 		"id": ID,
 	})
@@ -49,7 +58,7 @@ func (h Manager) CreateBook(c echo.Context) error {
 // @Failure 500 {string} string "message"
 // @Failure default {string} string "message"
 // @Router /book/{book_id} [put]
-func (h Manager) UpdateBook(c echo.Context) error {
+func (h Manager) UpdateBook(c echo.Context, logger *logging.Logger) error {
 	id := c.Param("id")
 
 	var req models.Book
@@ -57,7 +66,7 @@ func (h Manager) UpdateBook(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	err := h.srv.Book.Update(c.Request().Context(), id, &req)
+	err := h.srv.Book.Update(c.Request().Context(), id, &req, logger)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -76,8 +85,8 @@ func (h Manager) UpdateBook(c echo.Context) error {
 // @Failure 500 {object} string "message"
 // @Failure default {object} string "message"
 // @Router /book [get]
-func (h Manager) ListBooks(c echo.Context) error {
-	resp, err := h.srv.Book.List(c.Request().Context())
+func (h Manager) ListBooks(c echo.Context, logger *logging.Logger) error {
+	resp, err := h.srv.Book.List(c.Request().Context(), logger)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -97,10 +106,10 @@ func (h Manager) ListBooks(c echo.Context) error {
 // @Failure 500 {object} string "message"
 // @Failure default {object} string "message"
 // @Router /book/{book_id} [get]
-func (h Manager) GetBook(c echo.Context) error {
+func (h Manager) GetBook(c echo.Context, logger *logging.Logger) error {
 	id := c.Param("id")
 
-	resp, err := h.srv.Book.Get(c.Request().Context(), id)
+	resp, err := h.srv.Book.Get(c.Request().Context(), id, logger)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -121,10 +130,10 @@ func (h Manager) GetBook(c echo.Context) error {
 // @Failure 500 {object} string "message"
 // @Failure default {object} string "message"
 // @Router /book/{book_id} [delete]
-func (h Manager) DeleteBook(c echo.Context) error {
+func (h Manager) DeleteBook(c echo.Context, logger *logging.Logger) error {
 	id := c.Param("id")
 
-	err := h.srv.Book.Delete(c.Request().Context(), id)
+	err := h.srv.Book.Delete(c.Request().Context(), id, logger)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -143,8 +152,8 @@ func (h Manager) DeleteBook(c echo.Context) error {
 // @Failure 500 {string} string "message"
 // @Failure default {string} string "message"
 // @Router /book-users-income [get]
-func (h Manager) GetBooksUsersIncome(c echo.Context) error {
-	resp, err := h.srv.Book.GetBooksUsersIncome(c.Request().Context())
+func (h Manager) GetBooksUsersIncome(c echo.Context, logger *logging.Logger) error {
+	resp, err := h.srv.Book.GetBooksUsersIncome(c.Request().Context(), logger)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

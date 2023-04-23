@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"practice/config"
+	"practice/logging"
 	"practice/service"
 	"practice/storage"
 	"testing"
@@ -29,6 +30,7 @@ func TestBookHandler_Get(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
+	logger := logging.GetLogger()
 
 	h, err := getBookHandler(t)
 	if err != nil {
@@ -36,7 +38,7 @@ func TestBookHandler_Get(t *testing.T) {
 		return
 	}
 
-	if assert.NoError(t, h.GetBook(c)) {
+	if assert.NoError(t, h.GetBook(c, logger)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, getBookJSON, rec.Body.String())
 	}

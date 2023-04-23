@@ -2,6 +2,7 @@ package postgre
 
 import (
 	"context"
+	"practice/logging"
 	"practice/models"
 	"strconv"
 	"time"
@@ -29,24 +30,32 @@ func NewBookRepository(db *gorm.DB) *BookRepository {
 	return &BookRepository{db: db}
 }
 
-func (r *BookRepository) Create(ctx context.Context, book *models.Book) (string, error) {
+func (r *BookRepository) Create(ctx context.Context, book *models.Book, logger *logging.Logger) (string, error) {
+	logger.Infof("Repository level\n")
+
 	model := toPostgreBook(book)
 	result := r.db.WithContext(ctx).Omit("deleted_at").Create(&model)
 	return strconv.FormatUint(uint64(model.ID), 10), result.Error
 }
 
-func (r *BookRepository) Update(ctx context.Context, ID string, book *models.Book) error {
+func (r *BookRepository) Update(ctx context.Context, ID string, book *models.Book, logger *logging.Logger) error {
+	logger.Infof("Repository level\n")
+
 	id, err := strconv.ParseUint(ID, 10, 32)
 	if err != nil {
 		return err
 	}
+
+	logger.Infof("Get id:\v", id)
 
 	model := toPostgreBook(book)
 	model.ID = uint(id)
 	return r.db.Save(&model).Error
 }
 
-func (r *BookRepository) Get(ctx context.Context, ID string) (models.Book, error) {
+func (r *BookRepository) Get(ctx context.Context, ID string, logger *logging.Logger) (models.Book, error) {
+	logger.Infof("Repository level\n")
+
 	book := new(Book)
 	err := r.db.WithContext(ctx).Where("id = ?", ID).First(book).Error
 	if err != nil {
@@ -56,17 +65,23 @@ func (r *BookRepository) Get(ctx context.Context, ID string) (models.Book, error
 	return toBookModel(book), nil
 }
 
-func (r *BookRepository) Delete(ctx context.Context, ID string) error {
+func (r *BookRepository) Delete(ctx context.Context, ID string, logger *logging.Logger) error {
+	logger.Infof("Repository level\n")
+
 	return r.db.WithContext(ctx).Delete(&Book{}, ID).Error
 }
 
-func (r *BookRepository) List(ctx context.Context) ([]models.Book, error) {
+func (r *BookRepository) List(ctx context.Context, logger *logging.Logger) ([]models.Book, error) {
+	logger.Infof("Repository level\n")
+
 	var books []Book
 	err := r.db.WithContext(ctx).Find(&books)
 	return toBookModels(books), err.Error
 }
 
-func (r *BookRepository) GetBooksUsersIncome(ctx context.Context) ([]models.BookUserIncome, error) {
+func (r *BookRepository) GetBooksUsersIncome(ctx context.Context, logger *logging.Logger) ([]models.BookUserIncome, error) {
+	logger.Infof("Repository level\n")
+
 	var books []Book
 	err := r.db.Model(&Book{}).Preload("BookRents").Preload("Users").Find(&books).Error
 

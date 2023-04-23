@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"practice/logging"
 	"practice/models"
 	"practice/storage"
 )
@@ -19,12 +20,12 @@ type IUserService interface {
 }
 
 type IBookService interface {
-	Create(ctx context.Context, book *models.Book) (string, error)
-	Update(ctx context.Context, ID string, book *models.Book) error
-	Delete(ctx context.Context, ID string) error
-	Get(ctx context.Context, ID string) (models.Book, error)
-	List(ctx context.Context) ([]models.Book, error)
-	GetBooksUsersIncome(ctx context.Context) ([]models.BookUserIncome, error)
+	Create(ctx context.Context, book *models.Book, logger *logging.Logger) (string, error)
+	Update(ctx context.Context, ID string, book *models.Book, logger *logging.Logger) error
+	Delete(ctx context.Context, ID string, logger *logging.Logger) error
+	Get(ctx context.Context, ID string, logger *logging.Logger) (models.Book, error)
+	List(ctx context.Context, logger *logging.Logger) ([]models.Book, error)
+	GetBooksUsersIncome(ctx context.Context, logger *logging.Logger) ([]models.BookUserIncome, error)
 }
 
 type IBookRentService interface {
